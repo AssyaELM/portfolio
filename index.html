@@ -1,0 +1,1597 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Assia El Mourtadah — Portfolio</title>
+<meta name="description" content="Portfolio d'Assia El Mourtadah — Étudiante Ingénieure en Développement Numérique et Cybersécurité, ENSA Fès.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Orbitron:wght@500;700;900&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ==============================================================
+   HYBRIDE-01 — Portfolio Assia El Mourtadah
+   Intro terminal + fond néon cyberpunk réactif + sections hybrides
+   Palette : nuit profonde / cyan #00f0ff / magenta #ff2ea6 / vert terminal #3dff8e
+   ============================================================== */
+:root{
+  --bg:          #05030f;
+  --bg-2:        #0a0620;
+  --panel:       rgba(10, 8, 30, .72);
+  --panel-2:     rgba(14, 10, 38, .85);
+  --border:      rgba(0, 240, 255, .16);
+  --border-mag:  rgba(255, 46, 166, .22);
+  --cyan:        #00f0ff;
+  --cyan-soft:   rgba(0, 240, 255, .30);
+  --cyan-line:   rgba(0, 240, 255, .14);
+  --magenta:     #ff2ea6;
+  --magenta-soft:rgba(255, 46, 166, .28);
+  --violet:      #7b2fff;
+  --green:       #3dff8e;
+  --green-soft:  rgba(61, 255, 142, .30);
+  --text:        #e6e9ff;
+  --muted:       #9aa0cf;
+  --amber:       #ffd166;
+  --red:#ff5f56; --yellow:#ffbd2e; --grn-dot:#27c93f;
+  --display:'Orbitron', sans-serif;
+  --body:'Rajdhani', sans-serif;
+  --mono:'JetBrains Mono', monospace;
+  --radius:12px;
+  --maxw:1120px;
+}
+*,*::before,*::after{ margin:0; padding:0; box-sizing:border-box; }
+html{ scroll-behavior:smooth; scroll-padding-top:84px; }
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--body);
+  font-size:1.06rem;
+  line-height:1.65;
+  overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+body.intro-lock{ overflow:hidden; }
+::selection{ background:var(--magenta); color:#fff; }
+a{ color:var(--cyan); }
+
+/* ---------- FOND DYNAMIQUE (canvas plein écran) ---------- */
+#bgfx{
+  position:fixed; inset:0;
+  width:100%; height:100%;
+  z-index:0;
+  pointer-events:none;
+}
+/* voile radial + scanlines très légères par-dessus le canvas */
+body::after{
+  content:"";
+  position:fixed; inset:0; z-index:1; pointer-events:none;
+  background:
+    radial-gradient(1100px 640px at 50% -12%, rgba(123,47,255,.16), transparent 62%),
+    repeating-linear-gradient(to bottom, transparent 0 3px, rgba(0,0,0,.09) 3px 4px);
+  opacity:.6;
+}
+
+/* ==============================================================
+   INTRO ANIMÉE — écran terminal plein écran
+   ============================================================== */
+#intro{
+  position:fixed; inset:0; z-index:1000;
+  background:radial-gradient(900px 600px at 50% 40%, #0a0724, #05030f 75%);
+  display:flex; align-items:center; justify-content:center;
+  padding:24px;
+  transition:opacity .8s ease, transform .8s ease, visibility .8s;
+}
+#intro.done{ opacity:0; transform:scale(1.06); visibility:hidden; pointer-events:none; }
+.intro-term{
+  width:min(680px, 100%);
+  background:rgba(6, 4, 20, .92);
+  border:1px solid var(--border);
+  border-radius:12px;
+  box-shadow:0 0 60px rgba(0,240,255,.14), 0 0 120px rgba(255,46,166,.08), 0 30px 80px rgba(0,0,0,.6);
+  overflow:hidden;
+}
+.intro-term .bar, .term .bar{
+  display:flex; align-items:center; gap:.5rem;
+  padding:.6rem .95rem;
+  background:rgba(255,255,255,.04);
+  border-bottom:1px solid var(--border);
+}
+.dot{ width:12px; height:12px; border-radius:50%; flex-shrink:0; }
+.dot.r{background:var(--red)} .dot.y{background:var(--yellow)} .dot.g{background:var(--grn-dot)}
+.bar .bar-title{
+  font-family:var(--mono); font-size:.74rem; color:var(--muted);
+  margin-left:.4rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+}
+.intro-body{
+  font-family:var(--mono);
+  font-size:clamp(.78rem, 2.6vw, .92rem);
+  line-height:1.9;
+  padding:1.4rem 1.5rem 1.7rem;
+  min-height:290px;
+}
+.intro-body .u{ color:var(--green); }
+.intro-body .p{ color:var(--cyan); }
+.intro-body .c{ color:var(--text); font-weight:500; }
+.intro-line{ display:block; color:var(--text); opacity:0; transform:translateY(4px); transition:opacity .3s ease, transform .3s ease; white-space:pre-wrap; }
+.intro-line.on{ opacity:1; transform:none; }
+.intro-line .k{ color:var(--muted); }
+.intro-line .v{ color:var(--cyan); }
+.intro-line .vg{ color:var(--green); }
+.intro-line .vm{ color:var(--magenta); }
+.intro-line.ok{ color:var(--green); text-shadow:0 0 12px var(--green-soft); }
+.caret{
+  display:inline-block; width:9px; height:1.1em;
+  background:var(--green); vertical-align:text-bottom;
+  animation:blink 1s steps(1) infinite;
+}
+@keyframes blink{ 50%{ opacity:0; } }
+#skip-intro{
+  position:fixed; bottom:22px; right:22px; z-index:1001;
+  font-family:var(--mono); font-size:.75rem; letter-spacing:.06em;
+  color:var(--muted); background:rgba(6,4,20,.8);
+  border:1px solid var(--border); border-radius:999px;
+  padding:.45rem 1rem; cursor:pointer;
+  transition:color .25s, border-color .25s, box-shadow .25s, opacity .5s, visibility .5s;
+}
+#skip-intro:hover{ color:var(--cyan); border-color:var(--cyan); box-shadow:0 0 14px rgba(0,240,255,.35); }
+#skip-intro.done{ opacity:0; visibility:hidden; pointer-events:none; }
+
+/* ---------- Structure ---------- */
+main{ position:relative; z-index:2; }
+.wrap{ max-width:var(--maxw); margin:0 auto; padding:0 24px; }
+section{ padding:92px 0; }
+
+.panel{
+  background:var(--panel);
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:46px clamp(22px, 5vw, 54px);
+  box-shadow:0 0 40px rgba(0,240,255,.05), inset 0 0 60px rgba(123,47,255,.04);
+}
+
+/* ---------- Apparition au scroll ---------- */
+.reveal{ opacity:0; transform:translateY(28px); transition:opacity .7s ease, transform .7s ease; }
+.reveal.visible{ opacity:1; transform:none; }
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior:auto; }
+  .reveal{ opacity:1; transform:none; transition:none; }
+  #intro{ display:none; }
+  #skip-intro{ display:none; }
+}
+
+/* ---------- Titres de section ---------- */
+.sec-tag{
+  font-family:var(--mono); font-size:.82rem;
+  color:var(--magenta); letter-spacing:.18em; text-transform:uppercase;
+  display:block; margin-bottom:10px;
+  text-shadow:0 0 12px rgba(255,46,166,.5);
+}
+.sec-tag::before{ content:"> "; color:var(--green); }
+h2.sec-title{
+  font-family:var(--display);
+  font-size:clamp(1.5rem, 3.4vw, 2.25rem);
+  font-weight:700; letter-spacing:.05em; text-transform:uppercase;
+  position:relative; display:inline-block; margin-bottom:38px;
+  background:linear-gradient(92deg, var(--cyan) 15%, var(--magenta) 90%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  filter:drop-shadow(0 0 14px rgba(0,240,255,.3));
+}
+h2.sec-title::after{
+  content:""; position:absolute; left:0; bottom:-12px;
+  width:64px; height:2px;
+  background:linear-gradient(90deg, var(--cyan), var(--magenta), transparent);
+  box-shadow:0 0 10px var(--cyan-soft);
+}
+
+/* ---------- Navigation ---------- */
+header{
+  position:fixed; top:0; left:0; right:0; z-index:60;
+  background:rgba(5,3,15,.82);
+  backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--border);
+}
+.nav{
+  max-width:var(--maxw); margin:0 auto; padding:0 24px;
+  height:64px; display:flex; align-items:center; justify-content:space-between;
+}
+.brand{
+  font-family:var(--mono); font-size:.95rem; color:var(--green);
+  text-decoration:none; letter-spacing:.05em; white-space:nowrap;
+  text-shadow:0 0 12px var(--green-soft);
+}
+.brand .cursor{ animation:blink 1.1s steps(1) infinite; }
+.nav-links{ display:flex; gap:4px; list-style:none; }
+.nav-links a{
+  font-family:var(--mono); font-size:.8rem; color:var(--muted);
+  text-decoration:none; padding:8px 11px;
+  border:1px solid transparent; border-radius:6px; letter-spacing:.04em;
+  transition:color .25s, border-color .25s, text-shadow .25s, background .25s;
+}
+.nav-links a:hover, .nav-links a:focus-visible{
+  color:var(--cyan); border-color:var(--cyan-line);
+  background:rgba(0,240,255,.05); text-shadow:0 0 10px var(--cyan-soft);
+}
+.burger{
+  display:none; background:none;
+  border:1px solid var(--border); border-radius:6px;
+  width:44px; height:40px; cursor:pointer;
+  flex-direction:column; align-items:center; justify-content:center; gap:5px;
+  transition:border-color .25s;
+}
+.burger:hover{ border-color:var(--cyan); }
+.burger span{ display:block; width:20px; height:2px; background:var(--cyan); transition:transform .3s, opacity .3s; }
+.burger[aria-expanded="true"] span:nth-child(1){ transform:translateY(7px) rotate(45deg); }
+.burger[aria-expanded="true"] span:nth-child(2){ opacity:0; }
+.burger[aria-expanded="true"] span:nth-child(3){ transform:translateY(-7px) rotate(-45deg); }
+@media (max-width: 920px){
+  .burger{ display:flex; }
+  .nav-links{
+    position:absolute; top:64px; left:0; right:0;
+    flex-direction:column; gap:0;
+    background:rgba(5,3,15,.97); border-bottom:1px solid var(--border);
+    padding:8px 16px 16px; display:none;
+  }
+  .nav-links.open{ display:flex; }
+  .nav-links a{ display:block; padding:12px 14px; font-size:.92rem; }
+}
+
+/* ---------- Hero ---------- */
+#hero{
+  min-height:100svh;
+  display:flex; align-items:center;
+  padding:150px 0 100px;
+  text-align:center;
+}
+#hero .wrap{ width:100%; }
+.hero-inner{ max-width:860px; margin:0 auto; }
+#hero h1{
+  font-family:var(--display);
+  font-size:clamp(2.1rem, 6.4vw, 4.1rem);
+  font-weight:900; line-height:1.08;
+  letter-spacing:.02em; text-transform:uppercase;
+  color:#f4f6ff; margin-bottom:16px;
+  text-shadow:0 0 30px rgba(0,240,255,.2);
+}
+#hero h1 .grad{
+  display:block;
+  background:linear-gradient(92deg, var(--cyan) 10%, var(--magenta) 90%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  filter:drop-shadow(0 0 20px rgba(0,240,255,.4)) drop-shadow(0 0 28px rgba(255,46,166,.25));
+}
+#hero .role{
+  font-family:var(--mono);
+  font-size:clamp(.85rem, 2.2vw, 1.05rem);
+  color:var(--cyan); letter-spacing:.06em; margin-bottom:24px;
+  text-shadow:0 0 14px rgba(0,240,255,.35);
+}
+#hero .role::before{ content:"// "; color:var(--muted); }
+#hero .lead{
+  color:var(--muted); max-width:660px; margin:0 auto 40px;
+  font-size:1.12rem; font-weight:500;
+}
+.hero-ctas{ display:flex; gap:16px; justify-content:center; flex-wrap:wrap; }
+.btn{
+  font-family:var(--display); font-size:.85rem; font-weight:700;
+  letter-spacing:.1em; text-transform:uppercase; text-decoration:none;
+  padding:15px 30px; border-radius:8px; display:inline-block; cursor:pointer;
+  transition:box-shadow .3s, background .3s, color .3s, transform .2s;
+}
+.btn:active{ transform:translateY(1px); }
+.btn-cyan{
+  background:var(--cyan); color:#03121a; border:1px solid var(--cyan);
+  box-shadow:0 0 20px rgba(0,240,255,.4);
+}
+.btn-cyan:hover{ box-shadow:0 0 36px rgba(0,240,255,.7); background:#4df5ff; }
+.btn-magenta{
+  background:rgba(255,46,166,.06); color:var(--magenta);
+  border:1px solid var(--magenta);
+  box-shadow:0 0 16px rgba(255,46,166,.25), inset 0 0 12px rgba(255,46,166,.05);
+}
+.btn-magenta:hover{ background:rgba(255,46,166,.14); box-shadow:0 0 30px rgba(255,46,166,.55); }
+.scroll-hint{
+  margin-top:64px; font-family:var(--mono); font-size:.72rem;
+  color:var(--muted); letter-spacing:.2em; text-transform:uppercase;
+  animation:hintfloat 2.4s ease-in-out infinite;
+}
+@keyframes hintfloat{ 50%{ transform:translateY(6px); opacity:.6; } }
+
+/* ==============================================================
+   PROFIL — fenêtre terminal (format cyber-01)
+   ============================================================== */
+.term{
+  background:rgba(6, 4, 20, .88);
+  border:1px solid var(--border);
+  border-radius:12px;
+  overflow:hidden;
+  box-shadow:0 0 40px rgba(0,240,255,.08), 0 24px 60px rgba(0,0,0,.5);
+}
+.term-body{
+  font-family:var(--mono);
+  font-size:.9rem; line-height:1.85;
+  padding:1.6rem clamp(1.2rem, 4vw, 2.2rem) 1.9rem;
+}
+.prompt{ color:var(--muted); word-break:break-word; }
+.prompt .user{ color:var(--green); }
+.prompt .path{ color:var(--cyan); }
+.prompt .cmd{ color:var(--text); font-weight:500; }
+.term-output{ margin-top:1.2rem; }
+.about-grid{
+  display:grid; grid-template-columns:300px 1fr;
+  gap:2.6rem; align-items:center;
+}
+@media (max-width: 680px){
+  .about-grid{ grid-template-columns:1fr; justify-items:center; }
+}
+.avatar{
+  width:168px; height:168px; border-radius:50%;
+  border:2px solid var(--cyan);
+  object-fit:cover;
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--display); font-size:2.9rem; font-weight:900;
+  background:radial-gradient(circle at 32% 30%, rgba(0,240,255,.16), rgba(6,4,20,.95) 72%);
+  box-shadow:0 0 28px rgba(0,240,255,.25), inset 0 0 24px rgba(123,47,255,.15);
+  position:relative;
+  background-clip:padding-box;
+  color:var(--cyan); text-shadow:0 0 18px var(--cyan-soft);
+}
+.avatar::before{
+  content:""; position:absolute; inset:-10px; border-radius:50%;
+  border:1px dashed var(--border-mag);
+  animation:spin 26s linear infinite;
+}
+.avatar-ring{
+  position:relative; align-self:center; justify-self:center;
+  width:min(300px, 76vw); aspect-ratio:1;
+}
+.avatar-ring::before{
+  content:""; position:absolute; inset:-13px; border-radius:50%;
+  border:1px dashed rgba(0,240,255,.35);
+  animation:spin 30s linear infinite;
+}
+.avatar-circle{
+  width:100%; height:100%; border-radius:50%; overflow:hidden;
+  background:radial-gradient(circle at 50% 26%, rgba(0,240,255,.12), rgba(5,3,15,.95) 72%);
+  border:2px solid var(--cyan);
+  animation:avatarGlow 3.4s ease-in-out infinite;
+}
+.avatar-photo{
+  display:block; width:100%; height:100%;
+  object-fit:cover; object-position:center top;
+}
+@keyframes avatarGlow{
+  0%, 100%{ box-shadow:0 0 16px var(--cyan-soft), 0 0 46px rgba(0,240,255,.14), inset 0 0 26px rgba(0,240,255,.10); }
+  50%     { box-shadow:0 0 26px var(--cyan-soft), 0 0 70px rgba(0,240,255,.22), inset 0 0 26px rgba(0,240,255,.10); }
+}
+@keyframes spin{ to{ transform:rotate(360deg); } }
+.about-text p{ margin-bottom:1rem; color:var(--text); }
+.kv{ color:var(--muted); font-size:.84rem; }
+.kv b{ color:var(--cyan); font-weight:500; }
+.term-body .end-cursor{ color:var(--muted); }
+
+/* ==============================================================
+   COMPÉTENCES — format cyber-03 (grille de cartes + tags)
+   ============================================================== */
+.skills-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(280px, 1fr));
+  gap:22px;
+}
+.skill-card{
+  background:var(--panel-2);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:26px 24px;
+  transition:border-color .3s, box-shadow .3s, transform .3s;
+}
+.skill-card:hover{
+  border-color:var(--cyan-soft);
+  box-shadow:0 0 24px rgba(0,240,255,.14);
+  transform:translateY(-4px);
+}
+.skill-card h3{
+  font-family:var(--display);
+  font-size:.9rem; font-weight:700;
+  letter-spacing:.08em; text-transform:uppercase;
+  color:var(--cyan); margin-bottom:16px;
+  display:flex; align-items:center; gap:10px;
+}
+.skill-card h3 .idx{
+  font-family:var(--mono); font-size:.75rem; color:var(--magenta);
+}
+.tags{ display:flex; flex-wrap:wrap; gap:8px; list-style:none; }
+.tags li{
+  font-family:var(--mono); font-size:.78rem; color:var(--text);
+  border:1px solid rgba(0,240,255,.16);
+  background:rgba(0,240,255,.05);
+  border-radius:4px; padding:4px 10px;
+  transition:border-color .25s, color .25s, box-shadow .25s;
+}
+.tags li:hover{
+  border-color:var(--magenta-soft); color:#ffd0ea;
+  box-shadow:0 0 10px var(--magenta-soft);
+}
+
+/* ==============================================================
+   PROJETS — 8 cartes, glow + inclinaison 3D au survol
+   ============================================================== */
+.projects-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(320px, 1fr));
+  gap:24px;
+  perspective:1200px;
+}
+@media (max-width: 720px){ .projects-grid{ grid-template-columns:1fr; } }
+.project-card{
+  background:var(--panel-2);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:28px 26px;
+  display:flex; flex-direction:column; gap:14px;
+  position:relative; overflow:hidden;
+  transform-style:preserve-3d;
+  will-change:transform;
+  transition:border-color .3s, box-shadow .3s, transform .25s ease-out;
+}
+.project-card::before{
+  content:""; position:absolute; top:0; left:0; right:0; height:2px;
+  background:linear-gradient(90deg, var(--cyan), var(--magenta), transparent);
+  opacity:0; transition:opacity .3s;
+}
+.project-card:hover{
+  border-color:var(--magenta-soft);
+  box-shadow:0 18px 46px rgba(0,0,0,.55), 0 0 30px rgba(255,46,166,.18), 0 0 22px rgba(0,240,255,.12);
+}
+.project-card:hover::before{ opacity:1; }
+.project-num{
+  font-family:var(--mono); font-size:.76rem;
+  color:var(--magenta); letter-spacing:.14em;
+}
+.project-card h3{
+  font-family:var(--display); font-size:1rem; font-weight:700;
+  color:#eef1ff; letter-spacing:.03em; line-height:1.4;
+}
+.project-card p{ font-size:.95rem; color:var(--muted); flex-grow:1; }
+.project-tags{ display:flex; flex-wrap:wrap; gap:7px; list-style:none; }
+.project-tags li{
+  font-family:var(--mono); font-size:.72rem; color:var(--cyan);
+  border:1px solid rgba(0,240,255,.18); border-radius:3px; padding:3px 8px;
+}
+.project-link{
+  font-family:var(--mono); font-size:.82rem;
+  color:var(--green); text-decoration:none;
+  display:inline-flex; align-items:center; gap:8px; margin-top:6px;
+  border:1px solid rgba(61,255,142,.35); border-radius:6px;
+  padding:8px 14px; align-self:flex-start;
+  background:rgba(61,255,142,.05);
+  transition:color .25s, border-color .25s, box-shadow .25s, gap .25s;
+}
+.project-link:hover{
+  color:#8dffbe; border-color:var(--green);
+  box-shadow:0 0 16px rgba(61,255,142,.35); gap:12px;
+}
+.project-link .arrow{ transition:transform .25s; display:inline-block; }
+.project-link:hover .arrow{ transform:translateX(3px); }
+
+/* ==============================================================
+   EXPÉRIENCE & FORMATION — timeline double
+   ============================================================== */
+.timeline-cols{ display:grid; grid-template-columns:1fr 1fr; gap:48px; }
+@media (max-width: 860px){ .timeline-cols{ grid-template-columns:1fr; } }
+.timeline h3{
+  font-family:var(--display); font-size:1rem; font-weight:700;
+  text-transform:uppercase; letter-spacing:.12em;
+  color:var(--magenta); margin-bottom:26px;
+  text-shadow:0 0 12px rgba(255,46,166,.4);
+}
+.tl-item{
+  position:relative; padding:0 0 32px 30px;
+  border-left:1px solid var(--cyan-line);
+}
+.tl-item:last-child{ padding-bottom:0; }
+.tl-item::before{
+  content:""; position:absolute; left:-6px; top:6px;
+  width:11px; height:11px; border-radius:50%;
+  background:var(--bg); border:2px solid var(--cyan);
+  box-shadow:0 0 10px var(--cyan-soft);
+}
+.tl-date{
+  font-family:var(--mono); font-size:.78rem; color:var(--green);
+  letter-spacing:.1em; display:block; margin-bottom:6px;
+}
+.tl-item h4{ font-weight:700; font-size:1.1rem; color:#eef1ff; margin-bottom:4px; }
+.tl-place{ font-size:.92rem; color:var(--magenta); font-weight:600; margin-bottom:8px; }
+.tl-item ul{ list-style:none; color:var(--muted); font-size:.95rem; }
+.tl-item ul li{ padding-left:18px; position:relative; margin-bottom:5px; }
+.tl-item ul li::before{ content:">"; position:absolute; left:0; color:var(--cyan); font-family:var(--mono); }
+.tl-item > p{ color:var(--muted); font-size:.95rem; }
+.tl-repo{
+  font-family:var(--mono); font-size:.78rem;
+  color:var(--green); text-decoration:none; white-space:nowrap;
+  border:1px solid rgba(61,255,142,.35); border-radius:4px;
+  padding:1px 7px; margin-left:4px;
+  background:rgba(61,255,142,.05);
+  transition:color .25s, border-color .25s, box-shadow .25s;
+}
+.tl-repo:hover{
+  color:#8dffbe; border-color:var(--green);
+  box-shadow:0 0 12px rgba(61,255,142,.35);
+}
+
+/* ==============================================================
+   CERTIFICATIONS — cartes avec emplacement d'image 4:3
+   ============================================================== */
+.certs-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));
+  gap:22px;
+}
+.cert-card{
+  background:var(--panel-2);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:20px;
+  display:flex; flex-direction:column; gap:14px;
+  transition:border-color .3s, box-shadow .3s, transform .3s;
+}
+.cert-card:hover{
+  border-color:var(--magenta-soft);
+  box-shadow:0 0 24px rgba(255,46,166,.18);
+  transform:translateY(-4px);
+}
+.cert-img{
+  aspect-ratio:4 / 3;
+  border:2px dashed rgba(0,240,255,.3);
+  border-radius:8px;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:8px;
+  background:linear-gradient(150deg, rgba(0,240,255,.05), rgba(255,46,166,.05));
+  transition:border-color .3s;
+}
+.cert-card:hover .cert-img{ border-color:rgba(255,46,166,.45); }
+.cert-img .glyph{
+  font-size:2rem;
+  filter:drop-shadow(0 0 12px rgba(0,240,255,.5));
+}
+.cert-img .hint{
+  font-family:var(--mono); font-size:.72rem;
+  color:var(--muted); letter-spacing:.08em;
+}
+/* image réelle du certificat (cliquable → lightbox) */
+.cert-shot{
+  aspect-ratio:4 / 3;
+  border:1px solid var(--border);
+  border-radius:8px;
+  overflow:hidden;
+  background:rgba(5,3,15,.55);
+  display:flex; align-items:center; justify-content:center;
+  cursor:zoom-in;
+  transition:border-color .3s, box-shadow .3s;
+}
+.cert-shot img{
+  width:100%; height:100%;
+  object-fit:contain;
+  display:block;
+}
+.cert-card:hover .cert-shot{
+  border-color:var(--cyan-soft);
+  box-shadow:0 0 18px rgba(0,240,255,.16);
+}
+.certs-subtitle{
+  font-family:var(--display);
+  font-size:1rem; font-weight:700;
+  text-transform:uppercase; letter-spacing:.12em;
+  color:var(--magenta); margin:52px 0 24px;
+  text-shadow:0 0 12px rgba(255,46,166,.4);
+}
+.certs-subtitle::before{ content:"> "; color:var(--green); font-family:var(--mono); }
+
+/* ---------- LIGHTBOX certificats ---------- */
+#lightbox{
+  position:fixed; inset:0; z-index:2000;
+  background:rgba(3,2,10,.88);
+  backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px);
+  display:flex; align-items:center; justify-content:center;
+  padding:4vh 4vw;
+  opacity:0; visibility:hidden; pointer-events:none;
+  transition:opacity .3s ease, visibility .3s;
+  cursor:zoom-out;
+}
+#lightbox.open{ opacity:1; visibility:visible; pointer-events:auto; }
+#lightbox img{
+  max-width:90vw; max-height:90vh;
+  border:1px solid var(--cyan-soft);
+  border-radius:8px;
+  box-shadow:0 0 60px rgba(0,240,255,.25), 0 30px 80px rgba(0,0,0,.7);
+  transform:scale(.96);
+  transition:transform .3s ease;
+}
+#lightbox.open img{ transform:scale(1); }
+#lightbox .lb-hint{
+  position:fixed; bottom:18px; left:50%; transform:translateX(-50%);
+  font-family:var(--mono); font-size:.72rem; letter-spacing:.12em;
+  color:var(--muted);
+}
+.cert-info h3{ font-size:.98rem; font-weight:700; color:#eef1ff; line-height:1.4; margin-bottom:4px; }
+.cert-info .org{ font-family:var(--mono); font-size:.8rem; color:var(--cyan); }
+.cert-info .when{
+  font-family:var(--mono); font-size:.72rem; letter-spacing:.18em;
+  color:var(--magenta); display:block; margin-top:6px;
+}
+
+/* ==============================================================
+   ACTIVITÉS & LANGUES
+   ============================================================== */
+.act-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));
+  gap:22px; margin-bottom:42px;
+}
+.act{
+  background:var(--panel-2);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:28px 26px;
+  transition:transform .3s, border-color .3s, box-shadow .3s;
+}
+.act:hover{
+  transform:translateY(-5px);
+  border-color:var(--cyan-soft);
+  box-shadow:0 0 24px rgba(0,240,255,.14);
+}
+.act .glyph{ font-size:1.7rem; display:block; margin-bottom:12px; filter:drop-shadow(0 0 12px rgba(0,240,255,.55)); }
+.act h3{
+  font-family:var(--display); color:#eef1ff; font-size:.95rem;
+  letter-spacing:.05em; text-transform:uppercase; margin-bottom:8px;
+}
+.act p{ color:var(--muted); font-size:.92rem; }
+.langs{ display:flex; gap:12px; flex-wrap:wrap; }
+.lang{
+  font-family:var(--mono); font-size:.82rem; color:var(--text);
+  padding:9px 18px; border-radius:999px;
+  border:1px solid var(--border); background:rgba(0,240,255,.04);
+}
+.lang b{
+  background:linear-gradient(92deg, var(--cyan), var(--magenta));
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  font-weight:600;
+}
+
+/* ==============================================================
+   CONTACT
+   ============================================================== */
+.contact-grid{ display:grid; grid-template-columns:1fr 1.2fr; gap:48px; align-items:start; }
+@media (max-width: 860px){ .contact-grid{ grid-template-columns:1fr; } }
+.contact-intro > p{ color:var(--muted); margin-bottom:26px; }
+.contact-links{ list-style:none; display:flex; flex-direction:column; gap:14px; }
+.contact-links a{
+  display:flex; align-items:center; gap:14px;
+  text-decoration:none; color:var(--text);
+  font-family:var(--mono); font-size:.88rem;
+  border:1px solid var(--border); border-radius:10px;
+  padding:14px 18px; background:var(--panel-2);
+  transition:border-color .3s, box-shadow .3s, color .3s, transform .25s;
+  word-break:break-all;
+}
+.contact-links a:hover{
+  border-color:var(--cyan-soft); color:var(--cyan);
+  box-shadow:0 0 18px rgba(0,240,255,.14);
+  transform:translateX(5px);
+}
+.contact-links .ico{ color:var(--magenta); font-family:var(--mono); flex-shrink:0; }
+form{ display:flex; flex-direction:column; gap:18px; }
+label{
+  font-family:var(--mono); font-size:.76rem;
+  color:var(--cyan); letter-spacing:.14em; text-transform:uppercase;
+  display:block; margin-bottom:8px;
+}
+input, textarea{
+  width:100%;
+  background:rgba(5,3,15,.6);
+  border:1px solid var(--border); border-radius:8px;
+  color:var(--text); font-family:var(--body); font-size:.98rem;
+  padding:13px 16px;
+  transition:border-color .3s, box-shadow .3s;
+}
+input:focus, textarea:focus{
+  outline:none; border-color:var(--magenta);
+  box-shadow:0 0 0 3px rgba(255,46,166,.14), 0 0 16px rgba(255,46,166,.22);
+}
+input::placeholder, textarea::placeholder{ color:rgba(154,160,207,.55); }
+textarea{ resize:vertical; min-height:140px; }
+form .btn-cyan{ align-self:flex-start; border:none; }
+
+/* ---------- Footer ---------- */
+footer{
+  position:relative; z-index:2;
+  border-top:1px solid var(--border);
+  background:rgba(5,3,15,.88);
+  padding:32px 24px; text-align:center;
+}
+footer p{ font-family:var(--mono); font-size:.84rem; color:var(--muted); }
+footer .prompt-g{ color:var(--green); }
+
+/* ---------- Lien galerie ---------- */
+.gallery-link{
+  position:fixed; bottom:16px; right:16px; z-index:70;
+  font-family:var(--mono); font-size:.74rem;
+  color:var(--muted); text-decoration:none;
+  background:rgba(5,3,15,.85);
+  border:1px solid var(--border); border-radius:999px;
+  padding:7px 13px;
+  transition:color .25s, border-color .25s, box-shadow .25s;
+}
+.gallery-link:hover{ color:var(--cyan); border-color:var(--cyan); box-shadow:0 0 12px rgba(0,240,255,.35); }
+
+@media (max-width: 480px){
+  section{ padding:68px 0; }
+  .panel{ padding:34px 20px; }
+  .hero-ctas .btn{ width:100%; text-align:center; }
+  .intro-body{ min-height:250px; }
+}
+</style>
+</head>
+<body class="intro-lock">
+
+<!-- ============ FOND DYNAMIQUE (canvas) ============ -->
+<canvas id="bgfx" aria-hidden="true"></canvas>
+
+<!-- ============ INTRO ANIMÉE ============ -->
+<div id="intro" role="presentation">
+  <div class="intro-term">
+    <div class="bar">
+      <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+      <span class="bar-title">assia@ensa-fes: ~ — boot</span>
+    </div>
+    <div class="intro-body">
+      <span class="prompt"><span class="u">assia@ensa-fes</span>:<span class="p">~</span>$ <span class="c" id="intro-typed"></span><span class="caret" id="intro-caret"></span></span>
+      <span class="intro-line" data-i="0"><span class="k">&gt; Nom&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</span> <span class="v">Assia EL MOURTADAH</span></span>
+      <span class="intro-line" data-i="1"><span class="k">&gt; Titre&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:</span> Étudiante Ingénieure — Développement Numérique &amp; Cybersécurité</span>
+      <span class="intro-line" data-i="2"><span class="k">&gt; Spécialité&nbsp;&nbsp;&nbsp;:</span> <span class="vm">Cybersécurité offensive &amp; défensive</span></span>
+      <span class="intro-line" data-i="3"><span class="k">&gt; Localisation&nbsp;:</span> Fès, Maroc</span>
+      <span class="intro-line" data-i="4"><span class="k">&gt; Formation&nbsp;&nbsp;&nbsp;&nbsp;:</span> ENSA Fès — 4ème année, Génie du Développement Numérique et Cybersécurité</span>
+      <span class="intro-line ok" data-i="5">[OK] Chargement du portfolio...</span>
+    </div>
+  </div>
+</div>
+<button id="skip-intro" type="button">Passer l'intro ▸</button>
+
+<!-- ============ NAVIGATION ============ -->
+<header>
+  <nav class="nav" aria-label="Navigation principale">
+    <a class="brand" href="#hero">assia@ensa-fes:~$<span class="cursor">▊</span></a>
+    <button class="burger" id="burger" aria-expanded="false" aria-controls="nav-links" aria-label="Ouvrir le menu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="#apropos">À propos</a></li>
+      <li><a href="#competences">Compétences</a></li>
+      <li><a href="#projets">Projets</a></li>
+      <li><a href="#parcours">Parcours</a></li>
+      <li><a href="#certifications">Certifications</a></li>
+      <li><a href="#activites">Activités</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+
+  <!-- ============ 1. HERO ============ -->
+  <section id="hero">
+    <div class="wrap">
+      <div class="hero-inner">
+        <h1>Assia <span class="grad">El Mourtadah</span></h1>
+        <p class="role">Étudiante Ingénieure en Développement Numérique et Cybersécurité</p>
+        <p class="lead">Étudiante ingénieure en Développement Numérique et Cybersécurité, passionnée par la sécurité offensive et défensive, la détection d'incidents, le cloud et le développement d'applications sécurisées.</p>
+        <div class="hero-ctas">
+          <a class="btn btn-cyan" href="#contact">Me contacter</a>
+          <a class="btn btn-magenta" href="#projets">Voir mes projets</a>
+        </div>
+        <p class="scroll-hint">▼ scroll</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 2. À PROPOS — fenêtre terminal (format cyber-01) ============ -->
+  <section id="apropos">
+    <div class="wrap">
+      <span class="sec-tag reveal">profil</span>
+      <h2 class="sec-title reveal">À propos</h2>
+      <div class="term reveal">
+        <div class="bar">
+          <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+          <span class="bar-title">assia@ensa-fes: ~/portfolio — bash</span>
+        </div>
+        <div class="term-body">
+          <p class="prompt"><span class="user">assia@ensa-fes</span>:<span class="path">~</span>$ <span class="cmd">cat profil.txt</span></p>
+          <div class="term-output about-grid">
+            <!-- PHOTO ICI -->
+            <div class="avatar-ring">
+              <div class="avatar-circle">
+                <img class="avatar-photo" src="assets/photo-profil.png" alt="Photo d'Assia El Mourtadah">
+              </div>
+            </div>
+            <div class="about-text">
+              <p>Je suis Assia El Mourtadah, étudiante ingénieure à l'ENSA Fès en Génie du Développement Numérique et Cybersécurité. Passionnée par la cybersécurité offensive et défensive, je m'intéresse particulièrement à l'analyse de logs, à la détection d'incidents, aux environnements Active Directory, aux SIEM et à la sécurité des applications web.</p>
+              <p>Rigoureuse, curieuse et motivée, je cherche à développer des solutions numériques fiables, sécurisées et utiles, tout en continuant à apprendre dans les domaines du SOC, de la sécurité applicative, du cloud et de la réponse aux incidents.</p>
+              <p class="kv"><b>localisation :</b> Fès, Maroc<br>
+              <b>formation :</b> ENSA Fès — 4ème année, Génie du Développement Numérique et Cybersécurité</p>
+            </div>
+          </div>
+          <p class="prompt end-cursor" style="margin-top:1.2rem"><span class="user">assia@ensa-fes</span>:<span class="path">~</span>$ <span class="caret"></span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 3. COMPÉTENCES — format cyber-03 ============ -->
+  <section id="competences">
+    <div class="wrap">
+      <div class="panel reveal">
+        <span class="sec-tag">cat skills.txt</span>
+        <h2 class="sec-title">Compétences</h2>
+        <div class="skills-grid">
+          <div class="skill-card">
+            <h3><span class="idx">01</span>Cybersécurité</h3>
+            <ul class="tags"><li>Nmap</li><li>Wireshark</li><li>Metasploit</li><li>Gobuster</li><li>Nikto</li></ul>
+          </div>
+          <div class="skill-card">
+            <h3><span class="idx">02</span>SIEM &amp; Analyse de logs</h3>
+            <ul class="tags"><li>Splunk</li><li>Sysmon</li><li>ELK Stack (Elasticsearch, Logstash, Kibana)</li></ul>
+          </div>
+          <div class="skill-card">
+            <h3><span class="idx">03</span>Réseaux</h3>
+            <ul class="tags"><li>TCP/IP</li><li>HTTP/S</li><li>DNS</li><li>SSH</li><li>DHCP</li><li>SMTP</li><li>FTP</li><li>SNMP v3</li><li>ARP</li><li>ICMP</li></ul>
+          </div>
+          <div class="skill-card">
+            <h3><span class="idx">04</span>Infrastructure &amp; Monitoring</h3>
+            <ul class="tags"><li>Docker</li><li>VirtualBox</li><li>VMware</li><li>Prometheus</li><li>Grafana</li><li>Alertmanager</li><li>Node Exporter</li><li>cAdvisor</li></ul>
+          </div>
+          <div class="skill-card">
+            <h3><span class="idx">05</span>Sécurité applicative</h3>
+            <ul class="tags"><li>SELinux</li><li>AppArmor</li><li>Seccomp</li></ul>
+          </div>
+          <div class="skill-card">
+            <h3><span class="idx">06</span>Développement</h3>
+            <ul class="tags"><li>Python</li><li>Flask</li><li>FastAPI</li><li>PHP</li></ul>
+          </div>
+          <div class="skill-card">
+            <h3><span class="idx">07</span>Systèmes</h3>
+            <ul class="tags"><li>Linux</li><li>Windows</li></ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 4. PROJETS — 8 projets, liens GitHub ============ -->
+  <section id="projets">
+    <div class="wrap">
+      <span class="sec-tag reveal">ls ~/projets</span>
+      <h2 class="sec-title reveal">Projets</h2>
+      <div class="projects-grid">
+
+        <article class="project-card reveal">
+          <span class="project-num">[PROJ_01]</span>
+          <h3>Simulation MITRE ATT&amp;CK sur Active Directory</h3>
+          <p>Déploiement d'un lab virtuel (AD, Windows 10, Kali Linux) et simulation de techniques d'attaque via Atomic Red Team. Centralisation des logs avec Sysmon et Splunk, création de règles de détection Sigma.</p>
+          <ul class="project-tags"><li>Active Directory</li><li>Splunk</li><li>Sigma</li><li>Atomic Red Team</li></ul>
+          <a class="project-link" href="https://github.com/AssyaELM/mitre-attack-simulation" target="_blank" rel="noopener noreferrer">Voir sur GitHub <span class="arrow">→</span></a>
+        </article>
+
+        <article class="project-card reveal">
+          <span class="project-num">[PROJ_02]</span>
+          <h3>Honeypot SSH sécurisé</h3>
+          <p>Honeypot SSH en Python avec confinement (SELinux, AppArmor, Seccomp). Collecte et analyse des logs via ELK Stack pour identifier les tentatives d'intrusion.</p>
+          <ul class="project-tags"><li>Python</li><li>ELK</li><li>SELinux</li><li>AppArmor</li><li>Seccomp</li></ul>
+          <a class="project-link" href="https://github.com/AssyaELM/Honeypot-SSH-Seccomp-AppArmor_ELK" target="_blank" rel="noopener noreferrer">Voir sur GitHub <span class="arrow">→</span></a>
+        </article>
+
+        <article class="project-card reveal">
+          <span class="project-num">[PROJ_03]</span>
+          <h3>Simulation OWASP Top 10</h3>
+          <p>Application web volontairement vulnérable (FastAPI, Docker) reproduisant les vulnérabilités OWASP Top 10. Exploitation des failles puis sécurisation et hardening de l'application.</p>
+          <ul class="project-tags"><li>FastAPI</li><li>Docker</li><li>OWASP</li></ul>
+          <a class="project-link" href="https://github.com/AssyaELM/misconfig-mayhem" target="_blank" rel="noopener noreferrer">Voir sur GitHub <span class="arrow">→</span></a>
+        </article>
+
+        <article class="project-card reveal">
+          <span class="project-num">[PROJ_04]</span>
+          <h3>Monitoring infrastructure cloud</h3>
+          <p>Plateforme de monitoring cloud (Prometheus, Grafana, Loki, Docker) : métriques temps réel, logs et alerting.</p>
+          <ul class="project-tags"><li>Prometheus</li><li>Grafana</li><li>Loki</li><li>Docker</li></ul>
+          <a class="project-link" href="https://github.com/AssyaELM/Monitoring-Infrastructure-Cloud" target="_blank" rel="noopener noreferrer">Voir sur GitHub <span class="arrow">→</span></a>
+        </article>
+
+        <article class="project-card reveal">
+          <span class="project-num">[PROJ_05]</span>
+          <h3>Analyse de malware — Cerber Lab</h3>
+          <p>Analyse du ransomware Cerber en environnement contrôlé, règles de détection YARA.</p>
+          <ul class="project-tags"><li>YARA</li><li>Malware Analysis</li><li>Ransomware</li></ul>
+          <a class="project-link" href="https://github.com/AssyaELM/malware-analysis-cerber-lab" target="_blank" rel="noopener noreferrer">Voir sur GitHub <span class="arrow">→</span></a>
+        </article>
+
+        <article class="project-card reveal">
+          <span class="project-num">[PROJ_06]</span>
+          <h3>Détection de phishing &amp; sensibilisation</h3>
+          <p>Détection d'emails de phishing et campagne de sensibilisation.</p>
+          <ul class="project-tags"><li>Phishing</li><li>Sensibilisation</li><li>Sécurité email</li></ul>
+          <a class="project-link" href="https://github.com/AssyaELM/FUTURE_CS_02" target="_blank" rel="noopener noreferrer">Voir sur GitHub <span class="arrow">→</span></a>
+        </article>
+
+        <article class="project-card reveal">
+          <span class="project-num">[PROJ_07]</span>
+          <h3>Supervision réseau SNMP</h3>
+          <p>Application web de supervision réseau (PHP, MySQL) : collecte SNMP, gestion des switches, état des ports en temps réel. Système d'alertes, historique des événements et génération de rapports PDF. Développée lors du stage à l'ONDA.</p>
+          <ul class="project-tags"><li>PHP</li><li>MySQL</li><li>SNMP</li><li>Monitoring</li></ul>
+          <a class="project-link" href="https://github.com/AssyaELM/snmp-supervision" target="_blank" rel="noopener noreferrer">Voir sur GitHub <span class="arrow">→</span></a>
+        </article>
+
+        <article class="project-card reveal">
+          <span class="project-num">[PROJ_08]</span>
+          <h3>Réseau hospitalier</h3>
+          <p>Conception et simulation d'une infrastructure réseau pour un hôpital sous Cisco Packet Tracer.</p>
+          <ul class="project-tags"><li>Cisco Packet Tracer</li><li>Réseaux</li><li>Architecture</li></ul>
+          <a class="project-link" href="https://github.com/AssyaELM/Hospital-network" target="_blank" rel="noopener noreferrer">Voir sur GitHub <span class="arrow">→</span></a>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 5. EXPÉRIENCE & FORMATION ============ -->
+  <section id="parcours">
+    <div class="wrap">
+      <div class="panel reveal">
+        <span class="sec-tag">history --timeline</span>
+        <h2 class="sec-title">Expérience &amp; Formation</h2>
+        <div class="timeline-cols">
+          <div class="timeline">
+            <h3>⚡ Expérience</h3>
+            <div class="tl-item">
+              <span class="tl-date">Mai — Juin 2026 · 1 mois</span>
+              <h4>Stage virtuel Cybersécurité — Future Interns</h4>
+              <p class="tl-place">À distance</p>
+              <ul>
+                <li>Task 1 — Évaluation de vulnérabilités d'un site web public de test : scan passif (Nmap, OWASP ZAP), inspection des en-têtes HTTP, 10 findings classés par criticité et rapport de consultant. <a class="tl-repo" href="https://github.com/AssyaELM/FUTURE_CS_01" target="_blank" rel="noopener noreferrer">FUTURE_CS_01 →</a></li>
+                <li>Task 2 — Détection de phishing &amp; sensibilisation : analyse de 3 emails réels (en-têtes SPF/DKIM/DMARC, VirusTotal, urlscan.io, décodage base64), classification des risques et guide de sensibilisation. <a class="tl-repo" href="https://github.com/AssyaELM/FUTURE_CS_02" target="_blank" rel="noopener noreferrer">FUTURE_CS_02 →</a></li>
+                <li>Task 3 — Analyse des risques de sécurité API (JSONPlaceholder, ReqRes) avec Postman : BOLA/IDOR, exposition excessive de données, CORS permissif, en-têtes de sécurité manquants ; rapport avec sévérités et remédiations. <a class="tl-repo" href="https://github.com/AssyaELM/FUTURE_CS_03" target="_blank" rel="noopener noreferrer">FUTURE_CS_03 →</a></li>
+              </ul>
+            </div>
+            <div class="tl-item">
+              <span class="tl-date">2025 · 1 mois</span>
+              <h4>Stage d'initiation — Aéroport Fès-Saïs (ONDA)</h4>
+              <p class="tl-place">Fès, Maroc</p>
+              <ul>
+                <li>Supervision des équipements réseau et développement d'une application de monitoring (PHP, MySQL).</li>
+                <li>Exploitation des données via SNMP, automatisation des alertes (Telegram) et rapports PDF.</li>
+              </ul>
+            </div>
+          </div>
+          <div class="timeline">
+            <h3>◈ Formation</h3>
+            <div class="tl-item">
+              <span class="tl-date">2022 — Présent</span>
+              <h4>ENSA Fès — École Nationale des Sciences Appliquées</h4>
+              <p class="tl-place">Fès, Maroc</p>
+              <p>Cycle Ingénieur, Génie du Développement Numérique et Cybersécurité — 4ème année.</p>
+            </div>
+            <div class="tl-item">
+              <span class="tl-date">2022</span>
+              <h4>Baccalauréat International Sciences Physiques</h4>
+              <p class="tl-place">Fès, Maroc</p>
+              <p>Mention Très Bien.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 6. CERTIFICATIONS — emplacements d'images ============ -->
+  <section id="certifications">
+    <div class="wrap">
+      <span class="sec-tag reveal">sudo verify --certs</span>
+      <h2 class="sec-title reveal">Certifications</h2>
+      <div class="certs-grid">
+
+        <article class="cert-card reveal">
+          <div class="cert-shot">
+            <img src="assets/certs/cisco-cyberops.png" alt="Certificat Cisco CyberOps Associate" loading="lazy">
+          </div>
+          <div class="cert-info">
+            <h3>Cisco CyberOps Associate</h3>
+            <p class="org">Cisco Networking Academy</p>
+            <span class="when">NOV. 2025</span>
+          </div>
+        </article>
+
+        <article class="cert-card reveal">
+          <div class="cert-shot">
+            <img src="assets/certs/thm-5shusitenb.png" alt="Certificat Pre Security Learning Path — TryHackMe" loading="lazy">
+          </div>
+          <div class="cert-info">
+            <h3>Pre Security Learning Path</h3>
+            <p class="org">TryHackMe</p>
+            <span class="when">FÉV. 2026</span>
+          </div>
+        </article>
+
+        <article class="cert-card reveal">
+          <div class="cert-shot">
+            <img src="assets/certs/opswat-onsa.png" alt="Certificat OPSWAT Network Security Associate (ONSA)" loading="lazy">
+          </div>
+          <div class="cert-info">
+            <h3>OPSWAT Network Security Associate (ONSA)</h3>
+            <p class="org">OPSWAT Academy</p>
+            <span class="when">MAI 2025</span>
+          </div>
+        </article>
+
+        <article class="cert-card reveal">
+          <div class="cert-shot">
+            <img src="assets/certs/opswat-icip.png" alt="Certificat OPSWAT Critical Infrastructure Protection (ICIP)" loading="lazy">
+          </div>
+          <div class="cert-info">
+            <h3>OPSWAT Critical Infrastructure Protection (ICIP)</h3>
+            <p class="org">OPSWAT Academy</p>
+            <span class="when">MAI 2025</span>
+          </div>
+        </article>
+
+        <article class="cert-card reveal">
+          <div class="cert-shot">
+            <img src="assets/certs/cyber-flag-challenge.png" alt="Certificat Cyber Flag Challenge — CyberNet" loading="lazy">
+          </div>
+          <div class="cert-info">
+            <h3>Cyber Flag Challenge</h3>
+            <p class="org">CyberNet</p>
+            <span class="when">MARS 2026</span>
+          </div>
+        </article>
+
+        <article class="cert-card reveal">
+          <div class="cert-shot">
+            <img src="assets/certs/how-to-ctf.png" alt="Certificat « How To CTF » session — CyberNet" loading="lazy">
+          </div>
+          <div class="cert-info">
+            <h3>« How To CTF » session</h3>
+            <p class="org">CyberNet</p>
+            <span class="when">MARS 2026</span>
+          </div>
+        </article>
+
+        <article class="cert-card reveal">
+          <div class="cert-shot">
+            <img src="assets/certs/udemy-wirshark.png" alt="Certificat Wireshark Ninja — Mastering Real Wireshark &amp; Packet Analysis — Udemy" loading="lazy">
+          </div>
+          <div class="cert-info">
+            <h3>Wireshark Ninja — Mastering Real Wireshark &amp; Packet Analysis</h3>
+            <p class="org">Udemy</p>
+            <span class="when">AVR. 2026</span>
+          </div>
+        </article>
+
+        <article class="cert-card reveal">
+          <div class="cert-shot">
+            <img src="assets/certs/udemy-flask-python-certificat.png" alt="Certificat HTML5, Python, Flask Framework — Complete Course — Udemy" loading="lazy">
+          </div>
+          <div class="cert-info">
+            <h3>HTML5, Python, Flask Framework — Complete Course</h3>
+            <p class="org">Udemy</p>
+            <span class="when">AOÛT 2025</span>
+          </div>
+        </article>
+
+        <article class="cert-card reveal">
+          <div class="cert-shot">
+            <img src="assets/certs/cc-0f1d5f63d7.png" alt="Certificat Introduction to Python — 365 Data Science" loading="lazy">
+          </div>
+          <div class="cert-info">
+            <h3>Introduction to Python</h3>
+            <p class="org">365 Data Science</p>
+            <span class="when">NOV. 2024</span>
+          </div>
+        </article>
+
+        <article class="cert-card reveal">
+          <div class="cert-shot">
+            <img src="assets/certs/cc-796851fa69.png" alt="Certificat SQL — 365 Data Science" loading="lazy">
+          </div>
+          <div class="cert-info">
+            <h3>SQL</h3>
+            <p class="org">365 Data Science</p>
+            <span class="when">NOV. 2024</span>
+          </div>
+        </article>
+
+        <article class="cert-card reveal">
+          <div class="cert-shot">
+            <img src="assets/certs/cc-be203b5bfd.png" alt="Certificat Introduction to R Programming — 365 Data Science" loading="lazy">
+          </div>
+          <div class="cert-info">
+            <h3>Introduction to R Programming</h3>
+            <p class="org">365 Data Science</p>
+            <span class="when">NOV. 2024</span>
+          </div>
+        </article>
+
+        <article class="cert-card reveal">
+          <div class="cert-shot">
+            <img src="assets/certs/cc-f1abade6d7.png" alt="Certificat Git and GitHub — 365 Data Science" loading="lazy">
+          </div>
+          <div class="cert-info">
+            <h3>Git and GitHub</h3>
+            <p class="org">365 Data Science</p>
+            <span class="when">NOV. 2024</span>
+          </div>
+        </article>
+
+      </div>
+
+      <h3 class="certs-subtitle reveal">Attestations &amp; recommandations</h3>
+      <div class="certs-grid">
+
+        <article class="cert-card reveal">
+          <div class="cert-shot">
+            <img src="assets/certs/future-interns-certificat-stage.png" alt="Certificat de stage — Future Interns, Cyber Security" loading="lazy">
+          </div>
+          <div class="cert-info">
+            <h3>Certificat de stage — Future Interns, Cyber Security</h3>
+            <p class="org">Future Interns</p>
+            <span class="when">JUIN 2026</span>
+          </div>
+        </article>
+
+        <article class="cert-card reveal">
+          <div class="cert-shot">
+            <img src="assets/certs/future-interns-lettre-recommandation.png" alt="Lettre de recommandation — Future Interns" loading="lazy">
+          </div>
+          <div class="cert-info">
+            <h3>Lettre de recommandation — Future Interns</h3>
+            <p class="org">Future Interns</p>
+            <span class="when">JUIN 2026</span>
+          </div>
+        </article>
+
+        <article class="cert-card reveal">
+          <div class="cert-shot">
+            <img src="assets/certs/certificates-bootcamp-assia.png" alt="Attestation de participation — Women in Cybersecurity Bootcamp" loading="lazy">
+          </div>
+          <div class="cert-info">
+            <h3>Women in Cybersecurity Bootcamp — participation</h3>
+            <p class="org">SecOps ENSA Fès × EliteSec UM6P × Hack The Box</p>
+            <span class="when">MARS 2026</span>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 7. ACTIVITÉS & LANGUES ============ -->
+  <section id="activites">
+    <div class="wrap">
+      <div class="panel reveal">
+        <span class="sec-tag">ps aux | grep engagement</span>
+        <h2 class="sec-title">Activités &amp; Engagement</h2>
+        <div class="act-grid">
+          <article class="act">
+            <span class="glyph">🛡️</span>
+            <h3>Club SecOps ENSA Fès</h3>
+            <p>Responsable Affaires Externes — engagement actif dans la communauté cybersécurité étudiante.</p>
+          </article>
+          <article class="act">
+            <span class="glyph">🎤</span>
+            <h3>CyberTech Day</h3>
+            <p>Organisation des éditions v2 et v3 de l'événement cybersécurité de l'école.</p>
+          </article>
+          <article class="act">
+            <span class="glyph">🏴</span>
+            <h3>Compétitions CTF</h3>
+            <p>Capture The Flag en mode offensif et défensif.</p>
+          </article>
+        </div>
+        <div class="langs">
+          <span class="lang"><b>Arabe</b> · natif</span>
+          <span class="lang"><b>Français</b> · courant</span>
+          <span class="lang"><b>Anglais</b> · technique</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 8. CONTACT ============ -->
+  <section id="contact">
+    <div class="wrap">
+      <div class="panel reveal">
+        <span class="sec-tag">./contact.sh --send</span>
+        <h2 class="sec-title">Contact</h2>
+        <div class="contact-grid">
+          <div class="contact-intro">
+            <p>Une opportunité, une question, un projet ? Établissons la connexion.</p>
+            <ul class="contact-links">
+              <li>
+                <a href="mailto:assia.elmourtadah@usmba.ac.ma">
+                  <span class="ico">[@]</span>assia.elmourtadah@usmba.ac.ma
+                </a>
+              </li>
+              <li>
+                <a href="https://www.linkedin.com/in/elmourtadah/" target="_blank" rel="noopener noreferrer">
+                  <span class="ico">[in]</span>linkedin.com/in/elmourtadah
+                </a>
+              </li>
+              <li>
+                <a href="https://github.com/AssyaELM" target="_blank" rel="noopener noreferrer">
+                  <span class="ico">[gh]</span>github.com/AssyaELM
+                </a>
+              </li>
+            </ul>
+          </div>
+          <form action="#" method="post">
+            <div>
+              <label for="f-nom">Nom</label>
+              <input type="text" id="f-nom" name="nom" placeholder="Votre nom" required>
+            </div>
+            <div>
+              <label for="f-email">Email</label>
+              <input type="email" id="f-email" name="email" placeholder="votre@email.com" required>
+            </div>
+            <div>
+              <label for="f-message">Message</label>
+              <textarea id="f-message" name="message" placeholder="Votre message…" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-cyan">Envoyer</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ 9. FOOTER ============ -->
+<footer>
+  <p><span class="prompt-g">$</span> © 2026 Assia El Mourtadah <span class="prompt-g">— exit 0</span></p>
+</footer>
+
+
+<!-- ============ LIGHTBOX CERTIFICATS ============ -->
+<div id="lightbox" role="dialog" aria-modal="true" aria-label="Certificat en grand" aria-hidden="true">
+  <img src="" alt="">
+  <span class="lb-hint">clic ou Échap pour fermer</span>
+</div>
+
+<script>
+/* ==============================================================
+   1. INTRO ANIMÉE — séquence de démarrage terminal (~5 s)
+   ============================================================== */
+(function(){
+  var intro   = document.getElementById('intro');
+  var skipBtn = document.getElementById('skip-intro');
+  var typed   = document.getElementById('intro-typed');
+  var caret   = document.getElementById('intro-caret');
+  var lines   = document.querySelectorAll('.intro-line');
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var timers  = [];
+  var finished = false;
+
+  function endIntro(){
+    if(finished) return;
+    finished = true;
+    timers.forEach(clearTimeout);
+    intro.classList.add('done');
+    skipBtn.classList.add('done');
+    document.body.classList.remove('intro-lock');
+    /* retire l'overlay du flux après la transition */
+    setTimeout(function(){ intro.style.display = 'none'; }, 900);
+  }
+
+  if(reduced){
+    /* mouvement réduit : pas d'intro */
+    endIntro();
+    intro.style.display = 'none';
+    return;
+  }
+
+  skipBtn.addEventListener('click', endIntro);
+
+  var cmd = 'whoami --detail';
+  var i = 0;
+  function typeChar(){
+    if(finished) return;
+    if(i < cmd.length){
+      typed.textContent += cmd.charAt(i++);
+      timers.push(setTimeout(typeChar, 48 + Math.random()*60));
+    }else{
+      caret.style.display = 'none';
+      showLines(0);
+    }
+  }
+  function showLines(n){
+    if(finished) return;
+    if(n < lines.length){
+      lines[n].classList.add('on');
+      timers.push(setTimeout(function(){ showLines(n+1); }, n === lines.length - 1 ? 620 : 430));
+    }else{
+      timers.push(setTimeout(endIntro, 900));
+    }
+  }
+  timers.push(setTimeout(typeChar, 600));
+})();
+
+/* ==============================================================
+   2. FOND DYNAMIQUE — grille rétro en perspective + particules
+      néon dérivantes, parallaxe + réaction au curseur.
+      Canvas unique, requestAnimationFrame, particules limitées.
+   ============================================================== */
+(function(){
+  var canvas = document.getElementById('bgfx');
+  var ctx = canvas.getContext('2d');
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var W = 0, H = 0, DPR = Math.min(window.devicePixelRatio || 1, 1.5);
+
+  /* souris : cible + valeur lissée (parallaxe douce) */
+  var mx = .5, my = .5, smx = .5, smy = .5;
+  var px = -9999, py = -9999; /* position curseur en px canvas */
+  window.addEventListener('pointermove', function(e){
+    mx = e.clientX / window.innerWidth;
+    my = e.clientY / window.innerHeight;
+    px = e.clientX; py = e.clientY;
+  }, {passive:true});
+  window.addEventListener('pointerleave', function(){ px = -9999; py = -9999; });
+
+  /* particules néon */
+  var COLORS = [
+    [0, 240, 255],    /* cyan */
+    [255, 46, 166],   /* magenta */
+    [123, 47, 255],   /* violet */
+    [61, 255, 142]    /* vert terminal (rare) */
+  ];
+  var parts = [];
+  function makeParts(){
+    var count = Math.min(70, Math.max(30, Math.round(W * H / 26000)));
+    parts = [];
+    for(var i = 0; i < count; i++){
+      var c = COLORS[i % 4 === 3 ? 3 : Math.floor(Math.random()*3)];
+      parts.push({
+        x: Math.random()*W, y: Math.random()*H,
+        vx: (Math.random()-.5)*.22, vy: (Math.random()-.5)*.18,
+        r: 1 + Math.random()*1.8,
+        c: c,
+        a: .25 + Math.random()*.35,
+        depth: .3 + Math.random()*.7   /* pour la parallaxe */
+      });
+    }
+  }
+
+  function resize(){
+    W = window.innerWidth; H = window.innerHeight;
+    canvas.width  = W * DPR;
+    canvas.height = H * DPR;
+    canvas.style.width  = W + 'px';
+    canvas.style.height = H + 'px';
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    makeParts();
+  }
+  var rt;
+  window.addEventListener('resize', function(){ clearTimeout(rt); rt = setTimeout(resize, 150); });
+  resize();
+
+  var t = 0;
+
+  function drawGrid(){
+    /* grille rétro en perspective, ancrée en bas, vitesse lente */
+    var horizonY = H * .62;
+    var vpX = W * .5 + (smx - .5) * -70;   /* point de fuite décalé par la souris */
+    var gh = H - horizonY;
+
+    ctx.save();
+    /* lignes horizontales : espacement en perspective, défilement continu */
+    var rows = 14;
+    var speed = (t * .00022) % 1;
+    for(var r = 0; r <= rows; r++){
+      var f = (r + speed) / rows;         /* 0 = horizon, 1 = bas */
+      var e = f * f;                       /* accélération perspective */
+      var y = horizonY + e * gh + (smy - .5) * 14;
+      var alpha = .04 + e * .16;
+      ctx.strokeStyle = 'rgba(255, 46, 166,' + alpha.toFixed(3) + ')';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(W, y);
+      ctx.stroke();
+    }
+    /* lignes verticales convergeant vers le point de fuite */
+    var cols = 16;
+    for(var c = -cols; c <= cols; c++){
+      var xb = vpX + c * (W / 10);         /* position en bas */
+      var alpha2 = .05 + Math.max(0, .12 - Math.abs(c) * .008);
+      ctx.strokeStyle = 'rgba(0, 240, 255,' + alpha2.toFixed(3) + ')';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(vpX, horizonY + (smy - .5) * 14);
+      ctx.lineTo(xb, H);
+      ctx.stroke();
+    }
+    /* lueur d'horizon */
+    var grad = ctx.createLinearGradient(0, horizonY - 60, 0, horizonY + 40);
+    grad.addColorStop(0, 'rgba(123,47,255,0)');
+    grad.addColorStop(.55, 'rgba(255,46,166,.07)');
+    grad.addColorStop(1, 'rgba(123,47,255,0)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, horizonY - 60, W, 100);
+    ctx.restore();
+  }
+
+  function drawParts(){
+    for(var i = 0; i < parts.length; i++){
+      var p = parts[i];
+      /* dérive lente */
+      p.x += p.vx; p.y += p.vy;
+      if(p.x < -20) p.x = W + 20; if(p.x > W + 20) p.x = -20;
+      if(p.y < -20) p.y = H + 20; if(p.y > H + 20) p.y = -20;
+
+      /* réaction au curseur : répulsion + surbrillance */
+      var glow = 0;
+      var dx = p.x - px, dy = p.y - py;
+      var d2 = dx*dx + dy*dy;
+      var R = 130;
+      if(d2 < R*R){
+        var d = Math.sqrt(d2) || 1;
+        var force = (1 - d / R) * .9;
+        p.x += (dx / d) * force * 2.2;
+        p.y += (dy / d) * force * 2.2;
+        glow = 1 - d / R;
+      }
+
+      /* parallaxe selon la profondeur */
+      var ox = (smx - .5) * 46 * p.depth;
+      var oy = (smy - .5) * 30 * p.depth;
+      var X = p.x + ox, Y = p.y + oy;
+
+      var a = p.a + glow * .5;
+      var r = p.r + glow * 2.4;
+      ctx.beginPath();
+      ctx.fillStyle = 'rgba(' + p.c[0] + ',' + p.c[1] + ',' + p.c[2] + ',' + a.toFixed(3) + ')';
+      ctx.arc(X, Y, r, 0, 6.2832);
+      ctx.fill();
+      if(glow > 0.05){
+        /* halo autour des particules proches du curseur */
+        ctx.beginPath();
+        ctx.fillStyle = 'rgba(' + p.c[0] + ',' + p.c[1] + ',' + p.c[2] + ',' + (glow * .12).toFixed(3) + ')';
+        ctx.arc(X, Y, r * 3.4, 0, 6.2832);
+        ctx.fill();
+      }
+    }
+  }
+
+  function frame(now){
+    t = now;
+    /* lissage de la parallaxe */
+    smx += (mx - smx) * .045;
+    smy += (my - smy) * .045;
+    ctx.clearRect(0, 0, W, H);
+    drawGrid();
+    drawParts();
+    requestAnimationFrame(frame);
+  }
+
+  if(!reduced){
+    requestAnimationFrame(frame);
+  }else{
+    /* mouvement réduit : une seule frame statique, sans animation */
+    smx = .5; smy = .5;
+    ctx.clearRect(0, 0, W, H);
+    drawGrid();
+    drawParts();
+  }
+})();
+
+/* ==============================================================
+   3. Menu burger mobile
+   ============================================================== */
+(function(){
+  var burger = document.getElementById('burger');
+  var links = document.getElementById('nav-links');
+  burger.addEventListener('click', function(){
+    var open = links.classList.toggle('open');
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    burger.setAttribute('aria-label', open ? 'Fermer le menu' : 'Ouvrir le menu');
+  });
+  links.addEventListener('click', function(e){
+    if(e.target.tagName === 'A'){
+      links.classList.remove('open');
+      burger.setAttribute('aria-expanded', 'false');
+    }
+  });
+})();
+
+/* ==============================================================
+   4. Apparition au scroll (IntersectionObserver)
+   ============================================================== */
+(function(){
+  var els = document.querySelectorAll('.reveal');
+  if(!('IntersectionObserver' in window)){
+    els.forEach(function(el){ el.classList.add('visible'); });
+    return;
+  }
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){
+        entry.target.classList.add('visible');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+  els.forEach(function(el){ io.observe(el); });
+})();
+
+/* ==============================================================
+   5. Inclinaison 3D des cartes projet au survol
+      (désactivée au tactile et en mouvement réduit)
+   ============================================================== */
+(function(){
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var coarse  = window.matchMedia('(pointer: coarse)').matches;
+  if(reduced || coarse) return;
+
+  document.querySelectorAll('.project-card').forEach(function(card){
+    var raf = null;
+    card.addEventListener('mousemove', function(e){
+      if(raf) return;
+      raf = requestAnimationFrame(function(){
+        var rect = card.getBoundingClientRect();
+        var rx = ((e.clientY - rect.top) / rect.height - .5) * -6;
+        var ry = ((e.clientX - rect.left) / rect.width - .5) * 6;
+        card.style.transform = 'perspective(900px) rotateX(' + rx.toFixed(2) + 'deg) rotateY(' + ry.toFixed(2) + 'deg) translateY(-6px)';
+        raf = null;
+      });
+    });
+    card.addEventListener('mouseleave', function(){
+      if(raf){ cancelAnimationFrame(raf); raf = null; }
+      card.style.transform = '';
+    });
+  });
+})();
+
+/* ==============================================================
+   6. LIGHTBOX — agrandissement des certificats (JS vanilla)
+   ============================================================== */
+(function(){
+  var lb = document.getElementById('lightbox');
+  var lbImg = lb.querySelector('img');
+
+  function openLB(src, alt){
+    lbImg.src = src;
+    lbImg.alt = alt || '';
+    lb.classList.add('open');
+    lb.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeLB(){
+    lb.classList.remove('open');
+    lb.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    /* vide la source après la transition pour éviter un flash */
+    setTimeout(function(){ if(!lb.classList.contains('open')) lbImg.src = ''; }, 320);
+  }
+
+  document.querySelectorAll('.cert-shot img').forEach(function(img){
+    img.closest('.cert-shot').addEventListener('click', function(){
+      openLB(img.src, img.alt);
+    });
+  });
+
+  /* fermeture : clic n'importe où sur l'overlay (image comprise) */
+  lb.addEventListener('click', closeLB);
+  /* fermeture : touche Échap */
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && lb.classList.contains('open')) closeLB();
+  });
+})();
+</script>
+</body>
+</html>
