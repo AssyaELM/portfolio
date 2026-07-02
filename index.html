@@ -1247,6 +1247,12 @@ footer .prompt-g{ color:var(--green); }
             </div>
             <button type="submit" class="btn btn-cyan">Envoyer</button>
           </form>
+          <div id="form-success" style="display:none; margin-top:1rem; padding:1.1rem 1.3rem; border:1px solid rgba(61,255,142,.45); border-radius:10px; color:#3dff8e; background:rgba(61,255,142,.08); font-weight:600;">
+            ✅ Message envoyé ! Merci, je vous répondrai dès que possible.
+          </div>
+          <div id="form-error" style="display:none; margin-top:1rem; padding:1.1rem 1.3rem; border:1px solid rgba(255,95,86,.45); border-radius:10px; color:#ff5f56; background:rgba(255,95,86,.08); font-weight:600;">
+            ⚠️ L'envoi a échoué. Réessayez, ou écrivez-moi directement à assia.elmourtadah@usmba.ac.ma
+          </div>
         </div>
       </div>
     </div>
@@ -1592,6 +1598,37 @@ footer .prompt-g{ color:var(--green); }
   /* fermeture : touche Échap */
   document.addEventListener('keydown', function(e){
     if(e.key === 'Escape' && lb.classList.contains('open')) closeLB();
+  });
+})();
+</script>
+<script>
+(function(){
+  var form = document.querySelector('form[name="contact"]');
+  if (!form) return;
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+    var btn = form.querySelector('button[type="submit"]');
+    var ok = document.getElementById('form-success');
+    var err = document.getElementById('form-error');
+    err.style.display = 'none';
+    btn.disabled = true;
+    var btnTexte = btn.textContent;
+    btn.textContent = 'Envoi…';
+    fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams(new FormData(form)).toString()
+    }).then(function(res){
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      form.reset();
+      form.style.display = 'none';
+      ok.style.display = 'block';
+      ok.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }).catch(function(){
+      err.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = btnTexte;
+    });
   });
 })();
 </script>
