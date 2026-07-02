@@ -1230,7 +1230,9 @@ footer .prompt-g{ color:var(--green); }
               </li>
             </ul>
           </div>
-          <form action="#" method="post">
+          <form name="contact" method="POST" action="/merci.html" data-netlify="true" netlify-honeypot="bot-field">
+            <input type="hidden" name="form-name" value="contact">
+            <p style="display:none"><label>Ne pas remplir : <input name="bot-field"></label></p>
             <div>
               <label for="f-nom">Nom</label>
               <input type="text" id="f-nom" name="nom" placeholder="Votre nom" required>

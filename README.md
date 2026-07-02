@@ -2,7 +2,7 @@
 
 Portfolio personnel d'**Assia El Mourtadah**, étudiante ingénieure en Développement Numérique et Cybersécurité à l'ENSA Fès.
 
-🌐 **Site en ligne : [portfolio-assia.netlify.app](https://portfolio-assia.netlify.app)**
+🌐 **Site en ligne : [portfolio-assiaelmourtadah.netlify.app](https://portfolio-assiaelmourtadah.netlify.app)**
 
 ## Aperçu
 
